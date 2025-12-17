@@ -8,9 +8,10 @@ const addForm = document.getElementById('addStudentForm');
 const paginate = document.querySelector('.pagination');
 const greet = document.getElementById('greet');
 let currentSearch = '';
-let token = localStorage.getItem('token');
+const getToken = () => localStorage.getItem('token');
 
 window.addEventListener('load', () => {
+    const token = getToken();
     if (!token) {
         window.location.href = 'login.html';
     }
@@ -22,12 +23,21 @@ const fetchData = async (url, options = {}) => {
     try {
         const res = await fetch(url, options)
         const data = await res.json();
+
+        if (res.status === 401) {
+            throw new Error('Unauthorized. Please log in again.');
+        }
         if (!res.ok) {
             throw new Error(data.message || 'Failed to fetch data');
         }
         return data;
     } catch (error) {
         console.error('Error fetching data:', error);
+        if (error.message === 'Unauthorized. Please log in again.') {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        }
         throw error;
     }
 }
@@ -38,7 +48,7 @@ const fetchStudents = async (search = '', pageNo = 1) => {
         const { data } = await fetchData(`${apiUrl}/?search=${encodeURIComponent(search)}&page=${pageNo}`, {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${getToken()}`
             }
         })
 
@@ -90,7 +100,7 @@ const viewStudent = async (id) => {
     const { data: student } = await fetchData(`${apiUrl}/${id}`, {
         method: 'GET',
         headers: {
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${getToken()}`
         }
     })
     viewModal.querySelector('#viewName').textContent = `${student.firstName} ${student.lastName}`
@@ -111,7 +121,7 @@ const deleteStudent = async (id) => {
         await fetch(`${apiUrl}/${id}`, {
             method: 'delete',
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${getToken()}`
             }
         })
         fetchStudents(currentSearch);
@@ -125,7 +135,7 @@ const editStudent = async (id) => {
     const { data: student } = await fetchData(`${apiUrl}/${id}`, {
         method: 'GET',
         headers: {
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${getToken()}`
         }
     });
 
@@ -151,7 +161,7 @@ editModal.addEventListener('submit', async (e) => {
         method: 'put',
         body: form,
         headers: {
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${getToken()}`
         }
     })
 
@@ -176,7 +186,7 @@ addForm.addEventListener('submit', async (e) => {
             method: 'POST',
             body: formData,
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${getToken()}`
             }
         });
 
@@ -207,6 +217,7 @@ paginate.addEventListener('click', (e) => {
 
 const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     window.location.href = 'login.html';
 }
 
