@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student Management</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
@@ -11,14 +12,16 @@
 <body class="p-4">
 
   <div class="container">
+    <p id="greet">Welcome ...</p>
     <h2 class="mb-4">Student Records</h2>
 
     <div class="d-flex justify-content-between mb-3">
       <input type="text" id="searchInput" class="form-control w-50" placeholder="Search by name">
       <div>
-        <button class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#addStudentModal">Add
+        <button type="button" class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#addStudentModal">Add
           Student</button>
-        <button class="btn btn-primary" onclick="fetchStudents()">Refresh</button>
+        <button type="button" class="btn btn-primary" onclick="fetchStudents()">Refresh</button>
+        <button type="button" class="btn btn-primary" onclick="logout()">logout</button>
       </div>
     </div>
 
@@ -48,10 +51,10 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Student Details</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <img id="viewProfilePic" src="" class="rounded mb-3" width="100" />
+          <img alt="profilePic" id="viewProfilePic" src="" class="rounded mb-3" width="100" />
           <p><strong>Name:</strong> <span id="viewName"></span></p>
           <p><strong>Email:</strong> <span id="viewEmail"></span></p>
           <p><strong>Phone:</strong> <span id="viewPhone"></span></p>
@@ -68,7 +71,7 @@
         <form id="addStudentForm" enctype="multipart/form-data">
           <div class="modal-header">
             <h5 class="modal-title">Add New Student</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <button aria-label="close" type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
           <div class="modal-body">
             <div class="mb-2">
@@ -84,7 +87,7 @@
               <input type="text" class="form-control" name="phone" placeholder="Phone" required>
             </div>
             <div class="mb-2">
-              <select class="form-select" name="gender" required>
+              <select title="gender" class="form-select" name="gender" required>
                 <option value="">Select Gender</option>
                 <option value="male">Male</option>
                 <option value="female">Female</option>
@@ -93,7 +96,7 @@
             </div>
             <div class="mb-2">
               <label>Upload Profile Picture:</label>
-              <input type="file" class="form-control" name="profilePic">
+              <input aria-label="profilePic" type="file" class="form-control" name="profilePic">
             </div>
           </div>
           <div class="modal-footer">
@@ -111,7 +114,7 @@
         <form id="editStudentForm" enctype="multipart/form-data">
           <div class="modal-header">
             <h5 class="modal-title">Edit Student</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <button aria-label="close" type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
           <div class="modal-body">
             <input type="hidden" id="editStudentId">
@@ -130,7 +133,7 @@
               <input type="text" class="form-control" id="editPhone" name="phone" placeholder="Phone" required>
             </div>
             <div class="mb-2">
-              <select class="form-select" id="editGender" name="gender" required>
+              <select title="gender" class="form-select" id="editGender" name="gender" required>
                 <option value="">Select Gender</option>
                 <option value="male">Male</option>
                 <option value="female">Female</option>
@@ -139,7 +142,7 @@
             </div>
             <div class="mb-2">
               <label>Upload New Profile Picture:</label>
-              <input type="file" class="form-control" id="editProfilePic" name="profilePic">
+              <input aria-label="profilePic" type="file" class="form-control" id="editProfilePic" name="profilePic">
             </div>
           </div>
           <div class="modal-footer">
