@@ -6,18 +6,41 @@ const addModal = document.getElementById('addStudentModal');
 const input = document.getElementById('searchInput');
 const addForm = document.getElementById('addStudentForm');
 const paginate = document.querySelector('.pagination');
+const greet = document.getElementById('greet');
 let currentSearch = '';
+let token = localStorage.getItem('token');
 
-const fetchData = async (url) => {
-    const res = await fetch(url)
-    return await res.json();
+window.addEventListener('load', () => {
+    if (!token) {
+        window.location.href = 'login.html';
+    }
+    const user = JSON.parse(localStorage.getItem('user'));
+    greet.textContent = `Welcome, ${user.username}!`;
+})
+
+const fetchData = async (url, options = {}) => {
+    try {
+        const res = await fetch(url, options)
+        const data = await res.json();
+        if (!res.ok) {
+            throw new Error(data.message || 'Failed to fetch data');
+        }
+        return data;
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        throw error;
+    }
 }
 
 const fetchStudents = async (search = '', pageNo = 1) => {
     try {
         currentSearch = search;
-        const { data } = await fetchData(`${apiUrl}/?search=${encodeURIComponent(search)}&page=${pageNo}`)
-        console.log(data);
+        const { data } = await fetchData(`${apiUrl}/?search=${encodeURIComponent(search)}&page=${pageNo}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
 
         const { docs: students, hasNextPage, hasPrevPage, nextPage, page, prevPage, totalPages } = data;
 
@@ -64,7 +87,12 @@ fetchStudents()
 
 
 const viewStudent = async (id) => {
-    const { data: student } = await fetchData(`${apiUrl}/${id}`)
+    const { data: student } = await fetchData(`${apiUrl}/${id}`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
     viewModal.querySelector('#viewName').textContent = `${student.firstName} ${student.lastName}`
     viewModal.querySelector('#viewEmail').textContent = `${student.email}`
     viewModal.querySelector('#viewPhone').textContent = `${student.phone}`
@@ -81,7 +109,10 @@ input.addEventListener('input', (e) => {
 const deleteStudent = async (id) => {
     try {
         await fetch(`${apiUrl}/${id}`, {
-            method: 'delete'
+            method: 'delete',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
         })
         fetchStudents(currentSearch);
     } catch (error) {
@@ -91,7 +122,12 @@ const deleteStudent = async (id) => {
 
 
 const editStudent = async (id) => {
-    const { data: student } = await fetchData(`${apiUrl}/${id}`);
+    const { data: student } = await fetchData(`${apiUrl}/${id}`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
 
     editModal.querySelector('#editFirstName').value = `${student.firstName}`
     editModal.querySelector('#editLastName').value = `${student.lastName}`
@@ -113,7 +149,10 @@ editModal.addEventListener('submit', async (e) => {
 
     const res = await fetch(`${apiUrl}/${studentId}`, {
         method: 'put',
-        body: form
+        body: form,
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
     })
 
     if (res.ok) {
@@ -136,6 +175,9 @@ addForm.addEventListener('submit', async (e) => {
         const res = await fetch(apiUrl, {
             method: 'POST',
             body: formData,
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
         });
 
         if (res.ok) {
@@ -162,6 +204,11 @@ paginate.addEventListener('click', (e) => {
     fetchStudents(currentSearch, page)
 })
 
+
+const logout = () => {
+    localStorage.removeItem('token');
+    window.location.href = 'login.html';
+}
 
 
 
