@@ -7,6 +7,7 @@ const input = document.getElementById('searchInput');
 const addForm = document.getElementById('addStudentForm');
 const paginate = document.querySelector('.pagination');
 const greet = document.getElementById('greet');
+const verifyBtn = document.getElementById('verifyBtn');
 let currentSearch = '';
 const getToken = () => localStorage.getItem('token');
 
@@ -17,6 +18,10 @@ window.addEventListener('load', () => {
     }
     const user = JSON.parse(localStorage.getItem('user'));
     greet.textContent = `Welcome, ${user.username}!`;
+    console.log('User verification status:', user.isVerified);
+    if (!user.isVerified) {
+        verifyBtn.classList.remove('d-none');
+    }
 })
 
 const fetchData = async (url, options = {}) => {
@@ -219,6 +224,25 @@ const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     window.location.href = 'login.html';
+}
+
+
+const verify = async () => {
+    try {
+        const res = await fetchData('http://localhost:3000/api/users/send-verify-email', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${getToken()}`
+            }
+        })
+
+        alert('Verification email sent. Please check your inbox.');
+        verifyBtn.classList.add('d-none');
+    } catch (error) {
+        console.log(error);
+
+        alert('Error sending verification email. Please try again later.');
+    }
 }
 
 
