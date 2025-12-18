@@ -6,7 +6,6 @@ registerForm.addEventListener('submit', async (event) => {
     const formData = new FormData(registerForm);
     const data = Object.fromEntries(formData.entries());
 
-    console.log(data);
     try {
         const response = await fetch('http://localhost:3000/api/users/register', {
             method: 'POST',
@@ -16,7 +15,6 @@ registerForm.addEventListener('submit', async (event) => {
             body: JSON.stringify(data)
         });
         const result = await response.json();
-        console.log(result);
         if (!response.ok) {
             throw new Error(result.message || 'Registration failed');
         }

@@ -32,8 +32,6 @@ loginForm.addEventListener('submit', async function (e) {
             throw new Error(data.message || 'Login failed');
         }
 
-        console.log(data);
-
         localStorage.setItem('token', data.data.token);
         localStorage.setItem('user', JSON.stringify(data.data.user));
         window.location.href = '/index.html';

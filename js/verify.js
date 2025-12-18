@@ -16,8 +16,6 @@ window.addEventListener('load', async () => {
         }
 
         const {data} = await res.json();
-        console.log(data);
-        
 
         localStorage.setItem('user', JSON.stringify(data.user));
         window.location.href = '/index.html';
