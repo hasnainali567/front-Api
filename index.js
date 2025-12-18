@@ -8,8 +8,8 @@ const addForm = document.getElementById('addStudentForm');
 const paginate = document.querySelector('.pagination');
 const greet = document.getElementById('greet');
 const verifyBtn = document.getElementById('verifyBtn');
-let currentSearch = '';
 const getToken = () => localStorage.getItem('token');
+let currentSearch = '';
 
 window.addEventListener('load', () => {
     const token = getToken();
@@ -97,13 +97,11 @@ const fetchStudents = async (search = '', pageNo = 1) => {
     }
 }
 
-
 fetchStudents()
 
 const setContent = (selector, content) => {
     document.querySelector(selector).textContent = content;
 }
-
 
 const viewStudent = async (id) => {
     const { data: student } = await fetchData(`${apiUrl}/${id}`, {
@@ -139,7 +137,6 @@ const deleteStudent = async (id) => {
     }
 }
 
-
 const editStudent = async (id) => {
     const { data: student } = await fetchData(`${apiUrl}/${id}`, {
         method: 'GET',
@@ -158,7 +155,6 @@ const editStudent = async (id) => {
     new bootstrap.Modal(editModal).show()
 
 }
-
 
 editModal.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -182,8 +178,6 @@ editModal.addEventListener('submit', async (e) => {
     }
 
 })
-
-
 
 addForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -229,7 +223,6 @@ const logout = () => {
     localStorage.removeItem('user');
     window.location.href = 'login.html';
 }
-
 
 const verify = async () => {
     try {
