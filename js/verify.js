@@ -15,6 +15,7 @@ window.addEventListener('load', async () => {
             throw new Error('Verification failed');
         }
 
+        localStorage.setItem('user', JSON.stringify(res.user));
         window.location.href = '/index.html';
     } catch (error) {
         console.error(error);
