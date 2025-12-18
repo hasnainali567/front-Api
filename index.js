@@ -17,8 +17,9 @@ window.addEventListener('load', () => {
         window.location.href = 'login.html';
     }
     const user = JSON.parse(localStorage.getItem('user'));
-    greet.textContent = `Welcome, ${user.username}!`;
-    console.log('User verification status:', user.isVerified);
+    if (user) {
+        greet.innerHTML = `Welcome, ${user.username}! ${user.isVerified ? '<i class="bi bi-patch-check btn-primary"></i>' : ''}`;
+    }
     if (!user.isVerified) {
         verifyBtn.classList.remove('d-none');
     }
