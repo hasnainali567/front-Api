@@ -100,6 +100,10 @@ const fetchStudents = async (search = '', pageNo = 1) => {
 
 fetchStudents()
 
+const setContent = (selector, content) => {
+    document.querySelector(selector).textContent = content;
+}
+
 
 const viewStudent = async (id) => {
     const { data: student } = await fetchData(`${apiUrl}/${id}`, {
@@ -108,11 +112,11 @@ const viewStudent = async (id) => {
             'Authorization': `Bearer ${getToken()}`
         }
     })
-    viewModal.querySelector('#viewName').textContent = `${student.firstName} ${student.lastName}`
-    viewModal.querySelector('#viewEmail').textContent = `${student.email}`
-    viewModal.querySelector('#viewPhone').textContent = `${student.phone}`
-    viewModal.querySelector('#viewGender').textContent = `${student.gender}`
-    viewModal.querySelector('#viewProfilePic').src = `http://localhost:3000/uploads/${student.profilePic}`
+    setContent('#viewName', `${student.firstName} ${student.lastName}`)
+    setContent('#viewEmail', `${student.email}`)
+    setContent('#viewPhone', `${student.phone}`)
+    setContent('#viewGender', `${student.gender}`)
+    document.querySelector('#viewProfilePic').src = `http://localhost:3000/uploads/${student.profilePic}`
 
     new bootstrap.Modal(viewModal).show()
 }
