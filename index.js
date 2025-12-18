@@ -232,7 +232,7 @@ const verify = async () => {
         const res = await fetchData('http://localhost:3000/api/users/send-verify-email', {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                'Authorization': `Bearer ${getToken()}`
             }
         })
 
